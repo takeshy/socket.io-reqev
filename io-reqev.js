@@ -27,6 +27,9 @@ IOReqEv.prototype.register = function register(path,service){
         if(!Array.isArray(arg.events)){
           events = [arg.events];
         }
+        if(events.length > service.events.length){
+          return;
+        }
         for(var i=0;i<events.length;i++){
           socket.join(events[i]);
         }
