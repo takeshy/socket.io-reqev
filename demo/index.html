@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/underscore.js"></script>
+<script type="text/javascript" src="js/backbone.js"></script>
+<script type="text/javascript" src="js/socket.io.min.js"></script>
+<script type="text/javascript" src="js/io-reqev-client.js"></script>
+<title>sample</title>
+</head>
+<body>
+	<div id="Continar">
+    <script type="text/javascript">
+    var Timer = Backbone.Model.extend({});
+    var TimerCollection = Backbone.Collection.extend({
+      model: Timer,
+      unwatch: function(){
+        if(this.socket){
+          this.socket.unwatch();
+        }
+      },
+      watch: function(params){
+        var that = this;
+        if(!this.socket){
+          this.socket = new IOReqEvClient("http://localhost:50000/timer",
+            function(obj){ that.add(obj)})
+        }
+        this.socket.watch(params);
+      }
+    });
+    var View = Backbone.View.extend({
+      template: _.template(
+        '<div>event</div>'+
+        '<input type="checkbox" name="events" value="five"/>5seconds' +
+        '<input type="checkbox" name="events" value="ten"/>10seconds' +
+        '<input type="checkbox" name="events" value="thirty"/>30seconds' +
+        '<div>request</div>'+
+        '<input type="checkbox" name="requests" value="current"/>current' +
+        '<br/>' +
+        '<input type="submit" id="send" value="send"/>' +
+        '<ul id="list">' +
+        '</ul>'
+      ),
+      events: {
+        "click #send": "send"
+      },
+      initialize: function(){
+        this.timerCollection = new TimerCollection();
+        this.listenTo(this.timerCollection,"add",this.append.bind(this));
+      },
+      remove: function(){
+        this.timerCollection.unwatch()
+        Backbone.View.prototype.remove.apply(this, []);
+      },
+      send: function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        this.timerCollection.watch({  
+          events: _.map($("input[name=events]:checked"),function(elem){return elem.value}),
+          requests: _.map($("input[name=requests]:checked"),function(elem){return elem.value})
+        });
+      },
+      append: function(d){
+        $("#list",this.$el).append("<li>" + d.get("time") + "</li>");
+      },
+      render: function(){
+        $(this.el).html(this.template());
+        return this;
+      }
+    });
+    $(document).ready(function(){
+      v = new View()
+      $("#Continar").html(v.render().el)
+    });
+    </script>
+	</div>
+</html>

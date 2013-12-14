@@ -1,0 +1,14 @@
+{
+  "name": "socket.io-reqev",
+  "main": "io-reqev.js",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "underscore": "*"
+  },
+  "files": [
+    "io-reqev.js",
+    "dist/io-reqev-client.js",
+    "LICENSE"
+  ]
+}

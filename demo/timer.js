@@ -1,0 +1,29 @@
+var events = require('events');
+function milliSecondRemain(now){
+  return 1000 - now.getMilliseconds();
+}
+var Timer = function(){
+  this.events = ["five","ten","thirty"];
+  var that = this;
+  this.timer = setTimeout(function secondTimer(){
+    var now = new Date();
+    if(now.getSeconds() % 5 == 0){
+      that.emit("five", {time: now.toString()});
+    }
+    if(now.getSeconds() % 10 == 0){
+      that.emit("ten", {time: now.toString()});
+    }
+    if(now.getSeconds() % 30 == 0){
+      that.emit("thirty", {time: now.toString()});
+    }
+    that.timer = setTimeout(secondTimer,milliSecondRemain(now));
+  },milliSecondRemain(new Date()));
+  return this;
+}
+Timer.prototype = new events.EventEmitter();
+Timer.prototype.request = function(req,cb){
+  if(req=="current"){
+    cb(null,{time: new Date().toString()});
+  }
+}
+module.exports = Timer;
