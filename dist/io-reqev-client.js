@@ -1,6 +1,7 @@
-IOReqEvClient = function(url,cb){
+IOReqEvClient = function(url,callback,errorCb){
  this.url = url;
- this.cb = cb;
+ this.callback = callback;
+ this.errorCb = errorCb;
  this.requestPool = [];
  this.eventPool = [];
 };
@@ -35,7 +36,10 @@ IOReqEvClient.prototype.watch = function(params){
   }
   if(!this.socket){
     this.socket = io.connect(this.url);
-    this.socket.on("reply", function(obj){that.cb(obj)});
+    this.socket.on("reply", function(obj){that.callback(obj)});
+    if(this.errorCb){
+      this.socket.on("error", function(obj){that.errorCb(obj)});
+    }
   }
   if(this.socket.socket.connected){
     this.socket.emit("message",params);

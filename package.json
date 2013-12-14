@@ -1,7 +1,7 @@
 {
   "name": "socket.io-reqev",
   "main": "io-reqev.js",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "private": false,
   "dependencies": {
     "underscore": "*"
@@ -10,5 +10,24 @@
     "io-reqev.js",
     "dist/io-reqev-client.js",
     "LICENSE"
-  ]
+  ],
+  "readmeFilename": "README.md",
+  "gitHead": "ea4e57c6ba2f3a4010ea04c6ade28ead5ed76e11",
+  "description": "A framework for [socket.io](http://socket.io/) (server and client).",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/takeshy/socket.io-reqev.git"
+  },
+  "keywords": [
+    "socket.io"
+  ],
+  "author": "Takeshi Morita",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/takeshy/socket.io-reqev/issues"
+  }
 }
