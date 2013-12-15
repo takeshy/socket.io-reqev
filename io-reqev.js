@@ -31,7 +31,9 @@ IOReqEv.prototype.register = function register(path,service){
           return;
         }
         for(var i=0;i<events.length;i++){
-          socket.join(events[i]);
+          if(service.events.indexOf(events[i]) != -1){
+            socket.join(events[i]);
+          }
         }
       }
       if(arg.requests){
