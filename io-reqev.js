@@ -15,7 +15,7 @@ IOReqEv.prototype.register = function register(path,service){
   that.io.of(path)
   .on('connection',function(socket){
     socket.on("message", function (arg) {
-      if(arg.events != null){
+      if(arg.events != null && service.events){
         var rooms = that.io.of(path).manager.roomClients[socket.id];
         for(var key in rooms){
           var room = key.split(path);
