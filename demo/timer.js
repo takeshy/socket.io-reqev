@@ -1,11 +1,8 @@
 var events = require('events');
-function milliSecondRemain(now){
-  return 1000 - now.getMilliseconds();
-}
 var Timer = function(){
   this.events = ["five","ten","thirty"];
   var that = this;
-  this.timer = setTimeout(function secondTimer(){
+  setInterval(function (){
     var now = new Date();
     if(now.getSeconds() % 5 == 0){
       that.emit("five", {time: now.toString()});
@@ -16,8 +13,7 @@ var Timer = function(){
     if(now.getSeconds() % 30 == 0){
       that.emit("thirty", {time: now.toString()});
     }
-    that.timer = setTimeout(secondTimer,milliSecondRemain(now));
-  },milliSecondRemain(new Date()));
+  },1000);
   return this;
 }
 Timer.prototype = new events.EventEmitter();
