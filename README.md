@@ -40,7 +40,7 @@ client(browser)
 ```js
 //<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 //<script src="https://raw.github.com/takeshy/socket.io-reqev/master/dist/io-reqev-client.js"></script>
-sock = new IOReqEvClient("http://localhost:50000/timer", function(obj){console.log(obj)})
+sock = new IOReqEvClient("http://localhost:50000/sample", function(obj){console.log(obj)})
 sock.watch({requests: ["now"],events: ["alarm"]})
 // when no need to use.
 // sock.unwatch() 
@@ -80,30 +80,14 @@ var ioReqEv = new IOReqEv(require('socket.io').listen(50000));
 
 ```js
 var events = require('events');
-var Timer = function(){
-  this.events = ["five","ten","thirty"];
-  var that = this;
-  setInterval(function (){
-    var now = new Date();
-    if(now.getSeconds() % 5 == 0){
-      that.emit("five", {time: now.toString()});
-    }
-    if(now.getSeconds() % 10 == 0){
-      that.emit("ten", {time: now.toString()});
-    }
-    if(now.getSeconds() % 30 == 0){
-      that.emit("thirty", {time: now.toString()});
-    }
-  },1000);
-  return this;
+
+var Sample = function(time){
+  setInterval(function(){this.emit("alarm", {time: new Date().toString()})}.bind(this),time);
+  this.events = ["alarm"];
 }
-Timer.prototype = new events.EventEmitter();
-Timer.prototype.request = function(req,cb){
-  if(req=="current"){
-    cb(null,{time: new Date().toString()});
-  }
-}
-ioReqEv.register("/timer",new Timer());
+Sample.prototype = new events.EventEmitter();
+Sample.prototype.request = function(req,cb){ return req == "now" ?  cb(null,new Date().toString()) : cb("invalid")}
+ioReqEv.register("/sample",new Sample(1000));
 ```
 
 ## Browser
@@ -132,8 +116,8 @@ subscribing befores events.
 if you don't subscribe any event anymore,you should set empty array.
 
 ```js
-var socket = new IOReqEvClient("http://localhost:50000/timer",function(obj){ console.log(obj)})
-var socket.watch({request: ["current"], events: ["five"]});
+sock = new IOReqEvClient("http://localhost:50000/sample", function(obj){console.log(obj)})
+sock.watch({requests: ["now"],events: ["alarm"]})
 ```
 
 ### unwatch()
