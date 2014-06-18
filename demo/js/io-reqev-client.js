@@ -11,7 +11,7 @@ IOReqEvClient = function(url,callback,errorCb){
 //}
 IOReqEvClient.prototype.watch = function(params){
   var that = this;
-  if(!this.socket || !this.socket.socket.connected){
+  if(!this.socket || !this.socket.connected){
     if(params.requests){
       if(Object.prototype.toString.call(params.requests) === "[object Array]"){
         this.requestPool = this.requestPool.concat(params.requests);
@@ -41,7 +41,7 @@ IOReqEvClient.prototype.watch = function(params){
       this.socket.on("error", function(obj){that.errorCb(obj)});
     }
   }
-  if(this.socket.socket.connected){
+  if(this.socket.connected){
     this.socket.emit("message",params);
   }else{
     this.socket.on('connect', function(){

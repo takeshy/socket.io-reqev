@@ -1,6 +1,8 @@
 # socket.io-reqev 
 
-A framework for [socket.io](http://socket.io/) (server and client).
+A framework for [socket.io](http://socket.io/) (server and client). 
+this version corresponds to socket.io >= ver 1.0
+if you want to use socket.io ver 0.9.x, choose socket.io-reqev ver 0.1.4
 
 It is designed to  make pub-sub and GET request easier.
 It allows you to write less code and easy to understand.
@@ -48,14 +50,14 @@ sock.watch({requests: ["now"],events: ["alarm"]})
 
 ## Node.js
 
-### Server()
+### IOReqEv
 
-  Create a new `server` with Socket.IO object. 
+  Create a new `IOReqEv` with Socket.IO object. 
 
-  ```js
-    var IOReqEv = require('socket.io-reqev')`
-    var ioReqEv = new IOReqEv(require('socket.io').listen(50000));
-  ```
+```js
+var IOReqEv = require('socket.io-reqev')`
+var ioReqEv = new IOReqEv(require('socket.io').listen(50000));
+```
 
 ### register(path:string,service:object)
 
@@ -76,6 +78,33 @@ sock.watch({requests: ["now"],events: ["alarm"]})
     when this method completes the request, this method shuold call the
     callback with the value and socket.io-recv replies the value to the client.
 
+```js
+var events = require('events');
+var Timer = function(){
+  this.events = ["five","ten","thirty"];
+  var that = this;
+  setInterval(function (){
+    var now = new Date();
+    if(now.getSeconds() % 5 == 0){
+      that.emit("five", {time: now.toString()});
+    }
+    if(now.getSeconds() % 10 == 0){
+      that.emit("ten", {time: now.toString()});
+    }
+    if(now.getSeconds() % 30 == 0){
+      that.emit("thirty", {time: now.toString()});
+    }
+  },1000);
+  return this;
+}
+Timer.prototype = new events.EventEmitter();
+Timer.prototype.request = function(req,cb){
+  if(req=="current"){
+    cb(null,{time: new Date().toString()});
+  }
+}
+ioReqEv.register("/timer",new Timer());
+```
 
 ## Browser
 
@@ -102,9 +131,16 @@ you want subscribe or if events is not passed or null,socket-io-recv
 subscribing befores events.
 if you don't subscribe any event anymore,you should set empty array.
 
+```js
+var socket = new IOReqEvClient("http://localhost:50000/timer",function(obj){ console.log(obj)})
+var socket.watch({request: ["current"], events: ["five"]});
+```
+
 ### unwatch()
   you don't need any request and event,then you call this method.
-
+```js
+var socket.unwatch();
+```
 
 # demo
 
