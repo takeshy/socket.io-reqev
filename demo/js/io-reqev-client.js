@@ -35,7 +35,11 @@ IOReqEvClient.prototype.watch = function(params){
     }
   }
   if(!this.socket){
-    this.socket = io.connect(this.url);
+    if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
+      this.socket = io.connect(this.url,{transports: ["websocket"]});
+    }else{
+      this.socket = io.connect(this.url,{forceJSONP: true});
+    }
     this.socket.on("reply", function(obj){that.callback(obj)});
     if(this.errorCb){
       this.socket.on("error", function(obj){that.errorCb(obj)});
