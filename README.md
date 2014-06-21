@@ -40,7 +40,7 @@ client(browser)
 ```js
 //<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 //<script src="https://raw.github.com/takeshy/socket.io-reqev/master/dist/io-reqev-client.js"></script>
-sock = new IOReqEvClient("http://localhost:50000/timer", function(obj){console.log(obj)})
+sock = new IOReqEvClient("http://localhost:50000/sample", function(obj){console.log(obj)})
 sock.watch({requests: ["now"],events: ["alarm"]})
 // when no need to use.
 // sock.unwatch() 
