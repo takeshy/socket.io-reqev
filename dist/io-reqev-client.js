@@ -35,10 +35,14 @@ IOReqEvClient.prototype.watch = function(params){
     }
   }
   if(!this.socket){
-    if(/iPhone|iPad|iPod/i.test(navigator.userAgent)){
-      this.socket = io.connect(this.url,{transports: ["websocket"]});
+    if(/android/i.test(navigator.userAgent)){
+      if(typeof WebSocket === 'undefined'){
+        this.socket = io.connect(this.url,{forceJSONP: true});
+      }else{
+        this.socket = io.connect(this.url,{transports: ["websocket"]});
+      }
     }else{
-      this.socket = io.connect(this.url,{forceJSONP: true});
+      this.socket = io.connect(this.url);
     }
     this.socket.on("reply", function(obj){that.callback(obj)});
     if(this.errorCb){
