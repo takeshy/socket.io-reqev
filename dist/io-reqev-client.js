@@ -35,7 +35,13 @@ IOReqEvClient.prototype.watch = function(params){
     }
   }
   if(!this.socket){
-    if((/android/i.test(navigator.userAgent) || /linux/i.test(navigator.userAgent)) && ! /chrom/i.test(navigator.userAgent)){
+    if((/android/i.test(navigator.userAgent) || /linux/i.test(navigator.userAgent))){
+      if("WebSocket" in window) {
+        this.socket = io.connect(this.url,{transports: ["websocket"]});
+      }else{
+        this.socket = io.connect(this.url,{forceJSONP: true});
+      }
+    }else if(/iphone/i.test(navigator.userAgent) || /ipad/i.test(navigator.userAgent)){
       if("WebSocket" in window) {
         this.socket = io.connect(this.url,{transports: ["websocket"]});
       }else{
@@ -48,15 +54,15 @@ IOReqEvClient.prototype.watch = function(params){
     if(this.errorCb){
       this.socket.on("error", function(obj){that.errorCb(obj)});
     }
-  }
-  if(this.socket.connected){
-    this.socket.emit("message",params);
-  }else{
     this.socket.on('connect', function(){
       that.socket.emit("message",{requests:that.requestPool,events: that.eventPool});
       that.requestPool = [];
       that.eventPool = [];
     });
+    return
+  }
+  if(this.socket.connected){
+    this.socket.emit("message",params);
   }
 }
 IOReqEvClient.prototype.unwatch = function(){
