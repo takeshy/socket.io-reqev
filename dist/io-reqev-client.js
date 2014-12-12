@@ -36,11 +36,7 @@ IOReqEvClient.prototype.watch = function(params){
   }
   if(!this.socket){
     if((/android/i.test(navigator.userAgent) || /linux/i.test(navigator.userAgent))){
-      if("WebSocket" in window) {
-        this.socket = io.connect(this.url,{transports: ["websocket"]});
-      }else{
-        this.socket = io.connect(this.url,{forceJSONP: true});
-      }
+      this.socket = io.connect(this.url,{forceJSONP: true});
     }else if(/iphone/i.test(navigator.userAgent) || /ipad/i.test(navigator.userAgent)){
       if("WebSocket" in window) {
         this.socket = io.connect(this.url,{transports: ["websocket"]});
