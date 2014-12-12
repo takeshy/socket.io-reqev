@@ -43,7 +43,7 @@ IOReqEv.prototype.register = function register(path,service){
         for(var i=0;i<requests.length;i++){
           service.request(requests[i],function(err,data){
             if(err){
-              socket.emit("error",err);
+              socket.emit("fail",err);
             }else{
               socket.emit("reply",data);
             }

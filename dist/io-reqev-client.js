@@ -48,7 +48,7 @@ IOReqEvClient.prototype.watch = function(params){
     }
     this.socket.on("reply", function(obj){that.callback(obj)});
     if(this.errorCb){
-      this.socket.on("error", function(obj){that.errorCb(obj)});
+      this.socket.on("fail", function(obj){that.errorCb(obj)});
     }
     this.socket.on('connect', function(){
       that.socket.emit("message",{requests:that.requestPool,events: that.eventPool});
