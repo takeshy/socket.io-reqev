@@ -3,9 +3,7 @@
   "main": "io-reqev.js",
   "version": "0.2.5",
   "private": false,
-  "dependencies": {
-    "underscore": "*"
-  },
+  "dependencies": {},
   "files": [
     "io-reqev.js",
     "dist/io-reqev-client.js",
